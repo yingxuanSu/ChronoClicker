@@ -17,7 +17,6 @@
 
 
 			#bar1 {
-				display: grid;
 				position: absolute;
 				width: 20%;
 				height: 80%;
@@ -27,7 +26,6 @@
 			}
 
 			#bar2 {
-				display: grid;
 				position: absolute;
 				width: 20%;
 				height: 80%;
@@ -41,18 +39,25 @@
 				display: grid;
 				position: absolute;
 				width: 60%;
-				height: 80%;
+				height: 70%;
 				background-color: #BC8F8F;
 				top: 20%;
 				left: 20%;
 				text-align:center;
 			}
 
+			#bottom {
+				position: absolute;
+				width:60%;
+				height:10%;
+				top:90%;
+				left:20%;
+			}
+
 		</style>
 	</head>
 
 	<body>
-		<div id="container">
 			<div id="title">
 			  <iframe src = "title.html" name="footer" title="Footer Menu" width = "100%" height = "100%" scrolling="auto">
               </iframe>
@@ -67,6 +72,10 @@
 			</div>
 			<div id="middle">
 			<iframe src = "middle.html" name="AsideMenu" title="Navigation Menu" width = "100%" height = "100%" scrolling="auto">
+              </iframe>
+			</div>
+			<div id="bottom">
+			<iframe src = "bottom.html" name="AsideMenu" title="Navigation Menu" width = "100%" height = "100%" scrolling="auto">
               </iframe>
 			</div>
 </body>
