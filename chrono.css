@@ -1,0 +1,33 @@
+body{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    user-select: none;
+}
+
+.main {
+    display: flex;
+    gap: 200px;
+}
+
+.left h3 {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 50px;
+}
+
+.chrono-image {
+    width: 350px;
+}
+
+.chrono-image:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.chrono-image:active {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
