@@ -3,7 +3,8 @@ let chrono = document.querySelector('.days')
 // Get the user's birthdate from the input
 let birthDateInput = new Date(document.getElementById('birthDate').value);
 let currentDate = birthDateInput;
-let msg = "There is no important event today";
+let msg_life = "There is no important event today";
+let msg_history = "There is no important event today";
 
 function inChrono() {
     chrono.innerHTML = parseFloat(chrono.innerHTML) + 1;
@@ -32,9 +33,9 @@ const events = [
 
 for (const ev in events){
     if (currentDate==ev[date]){
-        msg = ev[e];
+        msg_history = ev[e];
     } else if (currentDate.getMonth() == birthDateInput.getMonth() && currentDate.getDay() == birthDateInput.getDay() ){
-        msg = "Happy Birthday!"
+        msg_life = "Happy Birthday!"
     }
 }
 
