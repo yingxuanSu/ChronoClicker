@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrono Clicker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Input Page Styles */
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            gap: 70px;
+            background-color: rgb(110, 227, 145);
+        }
+
+        .input-container input {
+            padding: 10px;
+            font-size: 1.2em;
+        }
+
+        .input-container button {
+            padding: 10px 15px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        /* Game Page Styles */
+        .game-container {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .header {
+            height: 20%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #36db9c;
+        }
+
+    
+
+
+        .title {
+            width: 20%;
+            text-align: center;
+        }
+
+        .main-title {
+            width: 60%;
+            text-align: center;
+            font-size: 3em;
+        }
+
+        .content {
+            height: 80%;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 20%;
+            padding: 20px;
+            background-color: #a5fae9;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .clock {
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            transition: transform 0.1s;
+            background-image: url('https://pngimg.com/d/clock_PNG6627.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .clock:active {
+            transform: scale(0.95);
+        }
+
+        .clicks,
+        .current-date {
+            margin: 20px 0;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .event {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Input Page -->
+    <div class="input-container" id="inputPage">
+        <h1>Welcome to Chrono Clicker</h1>
+        <input type="date" id="birthDate">
+        <button onclick="startGame()">Start</button>
+    </div>
+
+    <!-- Game Page -->
+    <div class="game-container" id="gamePage">
+        <div class="header">
+            <div class="title">Life</div>
+            <div class="main-title">Chrono Clicker</div>
+            <div class="title">History</div>
+        </div>
+        <div class="content">
+            <div class="sidebar" id="lifeEvents">
+                <!-- Life events will be added here -->
+            </div>
+            <div class="main-content">
+                <div class="clicks"> Days: <span id="clickCount">0</span></div>
+                <div class="clock" onclick="clockClick()"></div>
+                <div class="current-date" id="currentDate"></div>
+            </div>
+            <div class="sidebar" id="historicalEvents">
+                <!-- Historical events will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let clicks = 0;
+        let currentDate = new Date();
+        let birthDate = null;
+
+        // Sample events
+        const lifeEvents = {
+            '1': 'First steps',
+            '730': 'Starting to talk',
+            '1825': 'First day of school',
+        };
+
+        const historicalEvents = {
+            '2001-09-11': 'September 11 attacks',
+            '2008-09-15': 'Lehman Brothers bankruptcy',
+            '2020-03-11': 'WHO declares COVID-19 pandemic',
+        };
+
+        function startGame() {
+            birthDate = new Date(document.getElementById('birthDate').value);
+            if (!birthDate || isNaN(birthDate.getTime())) {
+                alert('Please enter a valid birth date');
+                return;
+            }
+
+            currentDate = new Date(birthDate);
+            document.getElementById('inputPage').style.display = 'none';
+            document.getElementById('gamePage').style.display = 'flex';
+            updateDate();
+        }
+
+        function clockClick() {
+            clicks++;
+            document.getElementById('clickCount').textContent = clicks;
+
+            // Advance time by one day
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDate();
+
+            // Check for events
+            checkEvents();
+        }
+
+        function updateDate() {
+            document.getElementById('currentDate').textContent =
+                currentDate.toLocaleDateString();
+        }
+
+
+        function isBirthday(date) {
+            return date.getDate() === birthDate.getDate() &&
+                    date.getMonth() === birthDate.getMonth();
+            }
+
+        function checkEvents() {
+            // Check for birthday
+            if (isBirthday(currentDate)) {
+                const age = currentDate.getFullYear() - birthDate.getFullYear();
+                addEvent('lifeEvents', 
+                    `Happy ${age}${getOrdinalSuffix(age)} Birthday! 🎂`, 
+                    true
+                );
+            }
+
+            // Check other life events
+            const daysSinceBirth = Math.floor(
+                (currentDate - birthDate) / (1000 * 60 * 60 * 24)
+            );
+            
+            if (lifeEvents[daysSinceBirth]) {
+                addEvent('lifeEvents', 
+                    `Day ${daysSinceBirth}: ${lifeEvents[daysSinceBirth]}`
+                );
+            }
+
+            // Check historical events
+            const dateString = currentDate.toISOString().split('T')[0];
+            if (historicalEvents[dateString]) {
+                addEvent('historicalEvents', 
+                    `${dateString}: ${historicalEvents[dateString]}`
+                );
+            }
+        }
+
+        function getOrdinalSuffix(num) {
+                const j = num % 10;
+                const k = num % 100;
+                if (j == 1 && k != 11) return 'st';
+                if (j == 2 && k != 12) return 'nd';
+                if (j == 3 && k != 13) return 'rd';
+                return 'th';
+        }
+
+        function addEvent(containerId, text) {
+            const container = document.getElementById(containerId);
+            const event = document.createElement('div');
+            event.className = 'event';
+            event.textContent = text;
+            container.insertBefore(event, container.firstChild);
+        }
+    </script>
+</body>
+
+</html>
